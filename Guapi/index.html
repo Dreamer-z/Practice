@@ -1,12 +1,29 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>guapi</title>
-  </head>
-  <body>
+    <script>
+        if (document.documentElement.clientWidth <= 750) {
+            document.documentElement.style.fontSize = document.documentElement.clientWidth / 7.5 + 'px';
+        } else if (750 < document.documentElement.clientWidth) {
+            document.documentElement.style.fontSize = document.documentElement.clientWidth / 22.5 + 'px';
+        }
+        window.onresize = function() {
+            if (document.documentElement.clientWidth <= 750) {
+                document.documentElement.style.fontSize = document.documentElement.clientWidth / 7.5 + 'px';
+            } else if (750 < document.documentElement.clientWidth) {
+                document.documentElement.style.fontSize = document.documentElement.clientWidth / 22.5 + 'px';
+            }
+        }
+    </script>
+</head>
+
+<body>
     <div id="app"></div>
     <!-- built files will be auto injected -->
-  </body>
+</body>
+
 </html>
