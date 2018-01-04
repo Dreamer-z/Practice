@@ -26,7 +26,6 @@
 
 <style>
     .index{
-        font-size:.24rem;
         color:skyblue;
     }
     .index img{
