@@ -3,7 +3,7 @@
       <div class="title">Guapi</div>
       <div class="search">
         <yd-input class="searchInp" v-model="keyword" max="20" placeholder="请输入关键字" :show-clear-icon="true" :show-success-icon="false" :show-error-icon="false"></yd-input>
-        <yd-button class="searchBtn" size="large" bgcolor="#06ecf7" color="#FFF">搜索</yd-button>
+        <yd-button v-show="!windowSize" class="searchBtn" size="large" bgcolor="#06ecf7" color="#FFF">搜索</yd-button>
       </div>
       <ul class="headNav" ref="headNav" v-if="!windowSize">
         <li class="headNavLi"><a href="" @mouseenter="randomC()" @mouseleave="initC()">购票</a></li>
@@ -38,6 +38,9 @@
                 mobileNav:false,
             }
         },
+        computed:{
+            
+        },
         methods:{
             randomC:function(e){
                this.randomColor = "rgb("+parseInt(Math.random()*255)+","+parseInt(Math.random()*255)+","+parseInt(Math.random()*255)+")";
@@ -47,20 +50,20 @@
                 event.currentTarget.style.color = "#999";
             },
             widowsize(){
-                setTimeout(() => {
-                    if (document.documentElement.clientWidth<=750) {
-                        this.windowSize = true;
-                    }else{
-                        this.windowSize = false;
-                    };
-                }, 20);
                 window.resize = function(){
                     if (document.documentElement.clientWidth<=750) {
-                        this.windowSize = true;
+                       return this.windowSize = true;
                     }else{
-                        this.windowSize = false;
+                       return this.windowSize = false;
                     };
-                }
+                };
+                setTimeout(() => {
+                    if (document.documentElement.clientWidth<=750) {
+                       return this.windowSize = true;
+                    }else{
+                       return this.windowSize = false;
+                    };
+                }, 20);
             },
             mobile(){
                 this.mobileNav = !this.mobileNav;
@@ -106,7 +109,7 @@
 .head .search{
     float:left;
     height:100%;
-    margin-left:1rem;
+    margin-left:.8rem;
     overflow:hidden;
 }
 .head .search .searchInp{
@@ -195,14 +198,17 @@
     width:3rem;
     text-align:center;
     position:absolute;
-    right:-.3rem;
+    right:-.35rem;
     top:1rem;
     z-index:9;
 }
 .mobileNav .mobileNavLi{
     height:.5rem;
     line-height:.5rem;
-    border:1px solid #eee;
+    background-color: rgba(251, 0, 195,.3);
+    color: #fff;
+    border-bottom: 2px solid transparent;
+    border-top: 2px solid transparent;
 }
 .bounce-enter-active{
     animation: bounce-in .5s;
@@ -217,7 +223,7 @@
   }
   50% {
     opacity:0;
-    top:.25rem;
+    top:.5rem;
   }
   100% {
     opacity:1;

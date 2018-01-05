@@ -1,15 +1,17 @@
 <template>
   <div class="index">
     <Head></Head>
-    <img src="./../assets/logo.png">
-    <p>{{msg}}</p>
+    <div class="main">
+        <movieClass></movieClass>
+    </div>
     <Foot></Foot>
   </div>
 </template>
 
 <script>
-    import Head from '@/components/Header';
-    import Foot from '@/components/Footer';
+    import Head from '@/components/common/Header';
+    import Foot from '@/components/common/Footer';
+    import movieClass from '@/components/common/movieClass';
     export default {
         name:'index',
         data(){
@@ -20,6 +22,7 @@
         components:{
             Head,
             Foot,
+            movieClass,
         }
     }
 </script>
@@ -30,5 +33,9 @@
     }
     .index img{
         width:.3rem;
+    }
+    .main{
+        margin-top: 1rem;
+        margin-bottom: .8rem;
     }
 </style>

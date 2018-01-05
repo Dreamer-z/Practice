@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import Ind from '@/components/Index';
-import Movies from '@/components/movies';
+import Ind from '@/components/index/Index';
+import Movies from '@/components/top250/movies';
 
 Vue.use(Router);
 
