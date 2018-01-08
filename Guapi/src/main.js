@@ -9,6 +9,12 @@ import 'vue-ydui/dist/ydui.rem.css';
 Vue.config.productionTip = false;
 Vue.use(YDUI);
 
+// axios全局配置
+// Vue.prototype.$http = axios;
+// axios.defaults.baseURL = api;
+// axios.defaults.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+// axios.defaults.headers['XPS-Version'] = '1.0.0';
+
 /* eslint-disable no-new */
 new Vue({
     el: '#app',

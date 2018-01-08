@@ -24,8 +24,8 @@
         left: 50%;
         bottom: 0;
         margin-left: -50%;
-        background-color:rgba(65, 247, 44, 0.4);
-        color:#fff;
+        background-color:rgba(250, 255, 173, 0.6);
+        color:#fb00c3;
         text-align: center;
     }
 </style>

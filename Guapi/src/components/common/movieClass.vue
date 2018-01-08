@@ -1,59 +1,164 @@
 <template>
     <div>
-        <ul class="hot">
-            <li class="movieClass" v-for="index in json">
-
+        <ul class="hot" v-if="mdata.length" :class="{hotMobile:windowSize}">
+            <li :class="{mobileMovieClass:windowSize}" class="movieClass" v-for="item in mdata" :key="item.index">
+              <a href="">
+                <div class="poster">
+                  <img :src="item.images.large" alt="">
+                </div>
+                <div class="title" >{{item.title}}</div>
+                <template>
+                  <div class="stars" v-if="parseInt(item.rating.stars) > 0">
+                    <yd-rate v-model="item.rating.stars" :readonly="true"></yd-rate>
+                  </div>
+                  <div class="stars" v-else>暂无评分<div>
+                </template>
+              </a>
             </li>
         </ul>
     </div>
 </template>
 
 <script>
-import Vue from 'vue';
+import Vue from "vue";
 import axios from "axios";
-import vueAxios from "vue-axios";
-Vue.use(axios);
-Vue.use(vueAxios);
 export default {
   name: "movieClass",
   data() {
     return {
       list: "",
-      json: "",
-      value: ""
+      mdata: [],
+      value: "",
+      windowSize: false,
     };
   },
   methods: {
-    movieList(){
-      axios({
-        method: "GET",
-        url: "https://api.douban.com/v2/movie/in_theaters",
-        data: {
-          city: "长沙"
-        }
-      }).then(function(response) {
-          console.log(response);
-      }).catch(function(err) {
-          console.log(err);
-      });
+    movieList() {
+      const self = this;
+      axios
+        .get("api/v2/movie/in_theaters", {
+          params: {
+            city: "长沙",
+            key: "movie_premium_r, movie_premium_w",
+            count: "12",
+            star: "0",
+            total: "20"
+          }
+        })
+        .then(function(response) {
+          setTimeout(() => {
+            self.mdata = response.data.subjects;
+            for (let i = 0; i < self.mdata.length; i++) {
+              self.mdata[i].rating.stars = Math.round(self.mdata[i].rating.stars/ 10)
+            };
+            console.log(self.mdata);
+          }, 20);
+          return self.mdata;
+        })
+        .catch(function(error) {
+          console.log(error);
+        });
     },
+    widowsize() {
+      window.resize = function() {
+        if (document.documentElement.clientWidth <= 750) {
+          return (this.windowSize = true);
+        } else {
+          return (this.windowSize = false);
+        }
+      };
+      setTimeout(() => {
+        if (document.documentElement.clientWidth <= 750) {
+          return (this.windowSize = true);
+        } else {
+          return (this.windowSize = false);
+        }
+      }, 20);
+    }
   },
   created() {
+    this.widowsize();
     this.movieList();
   },
-  mounred() {
-
+  mounted() {
+    this.widowsize();
   }
 };
 </script>
 
 <style>
 .hot {
-  margin: 0.3rem;
+  width: 12rem;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.hot.hotMobile {
+  width: 7.5rem;
 }
 .movieClass {
-  width: 7.5rem;
-  padding: 0.3rem;
+  float: left;
+  width: 2.6rem;
+  margin: 0.2rem;
+  overflow: hidden;
+}
+.movieClass.mobileMovieClass {
+  width: 2.1rem;
+}
+.movieClass .poster {
+  width: 100%;
+  height: 4rem;
+}
+.movieClass.mobileMovieClass .poster {
+  width: 100%;
+  height: 3rem;
+}
+.poster img {
+  width: 100%;
+  height: 100%;
+}
+.movieClass .title {
+  font-size: 0.22rem;
+  text-align: center;
+  height: 0.56rem;
+  line-height: 0.28rem;
+  margin: 0.1rem 0;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.stars{
+  height: .4rem;
+  line-height: .4rem;
+  width: 100%;
+}
+.yd-cell-item{
+  height: .4rem;
+  width: 100%;
+  padding: 0;
   margin: 0 auto;
+}
+.yd-cell-left{
+  width:100%;
+  height: 100%;
+}
+.yd-rate a,
+.rate-active{
+  width: 20%;
+  height: .38rem;
+  padding-left:.06rem;
+  font-size:.36rem;
+}
+.movieClass.mobileMovieClass .rate-active{
+  height: .4rem;
+}
+.yd-rate a:after{
+  width: .100%;
+  height: .38rem;
+}
+.movieClass.mobileMovieClass .yd-rate a:after{
+  height: .44rem;
 }
 </style>

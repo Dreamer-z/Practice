@@ -88,7 +88,7 @@
     background: -webkit-linear-gradient(to bottom,rgba(180, 249, 172,.8),rgba(65, 247, 44, 0.5),rgba(180, 249, 172,.8)); 
     background: -o-linear-gradient(to bottom,rgba(180, 249, 172,.8),rgba(65, 247, 44, 0.5),rgba(180, 249, 172,.8)); 
     background: -moz-linear-gradient(to bottom,rgba(180, 249, 172,.8),rgba(65, 247, 44, 0.5),rgba(180, 249, 172,.8)); 
-    background: linear-gradient(to bottom,rgba(180, 249, 172,.8),rgba(65, 247, 44, 0.5),rgba(180, 249, 172,.8)); 
+    background: linear-gradient(to bottom,rgba(250, 255, 173, 0.8),rgba(242, 255, 34, 0.5),rgba(250, 255, 173, 0.8)); 
     color:#fb00c3;
     position:fixed;
     top:0;
@@ -203,8 +203,8 @@
     z-index:9;
 }
 .mobileNav .mobileNavLi{
-    height:.5rem;
-    line-height:.5rem;
+    height:.8rem;
+    line-height:.8rem;
     background-color: rgba(251, 0, 195,.3);
     color: #fff;
     border-bottom: 2px solid transparent;
