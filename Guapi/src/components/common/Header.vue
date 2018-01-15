@@ -57,13 +57,11 @@
                        return this.windowSize = false;
                     };
                 };
-                setTimeout(() => {
-                    if (document.documentElement.clientWidth<=750) {
-                       return this.windowSize = true;
-                    }else{
+                if (document.documentElement.clientWidth<=750) {
+                    return this.windowSize = true;
+                }else{
                        return this.windowSize = false;
-                    };
-                }, 20);
+                };
             },
             mobile(){
                 this.mobileNav = !this.mobileNav;

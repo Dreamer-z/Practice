@@ -1,0 +1,273 @@
+<template>
+  <div>
+    <div class="movieMsg">
+        <div class="photoScore">
+            <div class="photo"><img v-if="movieMsg.images" :src="movieMsg.images.large" alt=""></div>
+          </div>
+          <div class="introduce">
+              <h3 class="movieName">{{movieMsg.title}}</h3>
+              <div class="director" v-if="movieMsg.directors">导演：<span :dataid="movieMsg.directors[0].id">{{movieMsg.directors[0].name}}</span></div>
+              <div class="protagonist" v-if="movieMsg.casts">
+                  <div class="title">主演：</div>
+                  <div class="li" v-for="item in movieMsg.casts" :key="item.index"><span>{{item.name}}</span></div>
+              </div>
+              <div class="writers protagonist" v-if="movieMsg.writers">
+                  <div class="title">编剧：</div>
+                  <div class="li" v-for="item in movieMsg.writers" :key="item.index"><span>{{item.name}}</span></div>
+              </div>
+              <div class="type protagonist" v-if="movieMsg.genres">
+                  <div class="title">类型：</div>
+                  <div class="li" v-for="item in movieMsg.genres" :key="item.index"><span>{{item}}</span></div>
+              </div>
+              <div class="countries protagonist" v-if="movieMsg.countries">
+                  <div class="title">制片国家/地区：</div>
+                  <div class="li" v-for="item in movieMsg.countries" :key="item.index"><span>{{item}}</span></div>
+              </div>
+              <div class="pubdates protagonist" v-if="movieMsg.pubdates">
+                  <div class="title">上映日期：</div>
+                  <div class="li" v-for="item in movieMsg.pubdates" :key="item.index"><span>{{item}}</span></div>
+              </div>
+              <div class="durations" v-if="movieMsg.durations">时长：<span>{{movieMsg.durations[0]}}</span></div>
+          </div>
+      </div>
+    <div class="scorebox">
+        <div class="score">
+            <div class="title">豆瓣评分</div>
+            <div class="cont" v-if="movieMsg.rating">
+                <div class="averagenumber" v-if="parseInt(movieMsg.rating.average) > 0"><h2>{{movieMsg.rating.average}}</h2></div>
+                <div class="averagenumber" v-else>暂无评分</div>
+                <div class="averagestar">
+                    <template v-if="parseInt(movieMsg.rating.average) > 0">
+                        <div class="stars">
+                            <yd-rate v-model="movieMsg.rating.stars" :readonly="true"></yd-rate>
+                            <div class="commentNumber">{{movieMsg.ratings}}人评价</div>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="stars"></div>
+                    </template>
+                </div>
+            </div>
+        </div>
+        <div class="starDetails">
+            <div class="li" v-for="(item, index) in ratArr" :key="item">
+                <span>{{index+1}}星：</span>
+                <div class="progress">
+                    <div class="width"  v-if="ratArr" :style="{width:item+'%',}"></div>
+                    <div class="num">{{item+'%'}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+export default {
+  name:"",
+  data(){
+      return{
+          movieMsg:{
+              ratings:"",
+          },
+          ratArr:[],
+      }
+  },
+  methods:{
+    getMovie(){
+        const self = this;
+        axios
+            .get("api/v2/movie/subject/"+this.$route.query.id, {
+                params: {
+                    apikey: "0b2bdeda43b5688921839c8ecb20399b",
+                }
+            })
+            .then(function(response) {
+                setTimeout(() => {
+                    self.movieMsg = response.data;
+                    self.movieMsg.rating.stars = Math.round(self.movieMsg.rating.stars/10);
+                   function b() {
+                        var keys=[];//定义一个数组用来接受key    
+                        var values=0;//定义一个数组用来接受value
+                        var arr = [];
+                        for(var key in response.data.rating.details){   
+                            values += parseFloat(response.data.rating.details[key]);
+                            arr.push(response.data.rating.details[key]);     
+                        };
+                        for (let i = 0; i < arr.length; i++) {
+                            self.ratArr.push((arr[i]/values).toFixed(2)*100);
+                        }
+                        self.movieMsg.ratings = values;
+                        return a(self.movieMsg,self.ratArr);
+                    };
+                    b();
+                    function a(rat,arr){
+                        console.log(rat);
+                        console.log(arr);
+                    };
+                    
+                    console.log(self.movieMsg);
+                }, 20);
+                return self.movieMsg;
+            })
+            .catch(function(error) {
+                console.log(error);
+            });
+    },
+  },
+  created(){
+      this.getMovie();
+  },
+  mounted(){
+  }
+}
+</script>
+
+<style>
+.movieMsg{
+    width: 7.5rem;
+    padding: .25rem;
+    overflow: hidden;
+}
+.photoScore,.introduce{
+    float: left;
+}
+.photoScore{
+    width: 2rem;
+}
+.photoScore img{
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.introduce{
+    margin-left: .2rem;
+    color:#999;
+}
+.movieName{
+    font-size: .3rem;
+    color: #666;
+}
+.protagonist,.type{
+    overflow: hidden;
+    width: 4.8rem;
+}
+.protagonist .title,.type .title{float: left;}
+.protagonist .li,.type .li{float: left;}
+.protagonist .li span::before,.type .li span::before{
+    content: " / ";
+    color: #333;
+}
+.protagonist .li span,.type .li span{
+    color: skyblue;
+    padding-left: .05rem;
+}
+.protagonist .li:nth-of-type(2) span::before,.type .li:nth-of-type(2) span::before{
+    content: "";
+}
+.scorebox{
+    padding:0 .2rem;
+    height: 1.5rem;
+    overflow: hidden;
+}
+.scorebox .score{
+    float: left;
+    width: 3.2rem;
+    background-color: #eee;
+    padding: .1rem;
+}
+.scorebox .score .cont{
+    overflow: hidden;
+    height: 1rem;
+}
+.averagenumber{
+    float: left;
+    width: 1rem;
+    line-height: 1rem;
+    font-size: .4rem;
+    text-align: center;
+    color: red;
+}
+.averagestar{
+    float: left;
+    width: 2rem;
+}
+.stars {
+  height: 0.3rem;
+  width: 100%;
+  text-align: center;
+}
+.yd-rate {
+  width: 1.5rem;
+  margin: .1rem auto;
+}
+.yd-cell-left {
+  width: 100%;
+  height: 100%;
+}
+.yd-rate a,
+.rate-active {
+  width: 20%;
+  height: 0.3rem;
+  font-size: 0.28rem;
+}
+.yd-rate a:after {
+  width: 100%;
+  height: 100%;
+}
+.scorebox .score .cont .commentNumber{
+    font-size:.24rem;
+    width: 100%;
+    overflow : hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+.starDetails{
+    float: left;
+    width:3.8rem;
+    height: 1.5rem;
+    padding: 0 .3rem;
+}
+.starDetails .li{
+    position: relative;
+    height: .3rem;
+    line-height: .2rem;
+    padding: .05rem 0;
+    padding-left: .6rem;
+    font-size: .2rem;
+}
+.starDetails .li span{
+    position: absolute;
+    left: 0;
+    top: .05rem;
+    width: .6rem;
+}
+.progress{
+    width: 100%;
+    height:100%;
+    border-radius: .1rem;
+    overflow: hidden;
+    border: .01rem solid #eee;
+    position: relative;
+}
+.progress .width{
+    width: 0%;
+    height: 100%;
+    -webkit-transition: all .5s ease;
+    -moz-transition: all .5s ease;
+    transition: all .5s ease;
+    background-color: pink;
+}
+.progress .num{
+    width: 100%;
+    height: 100%;
+    font-size: .2rem;
+    position: absolute;
+    left: 0;
+    top: 0;
+    text-align: center;
+}
+</style>

@@ -1,22 +1,20 @@
 <template>
-    <div>
-        <ul class="hot" v-if="mdata.length" :class="{hotMobile:windowSize}">
-            <li :class="{mobileMovieClass:windowSize}" class="movieClass" v-for="item in mdata" :key="item.index">
-              <a href="">
-                <div class="poster">
-                  <img :src="item.images.large" alt="">
-                </div>
-                <div class="title" >{{item.title}}</div>
-                <template>
-                  <div class="stars" v-if="parseInt(item.rating.stars) > 0">
-                    <yd-rate v-model="item.rating.stars" :readonly="true"></yd-rate>
-                  </div>
-                  <div class="stars" v-else>暂无评分<div>
-                </template>
-              </a>
-            </li>
-        </ul>
+  <div class="hot" v-if="mdata.length" :class="{hotMobile:windowSize}">
+    <div :class="{mobileMovieClass:windowSize}" class="movieClass" v-for="item in mdata" :key="item.index" @click="movieDetails(item.id)">
+      <div class="poster">
+        <img :src="item.images.large" alt="">
+      </div>
+      <div class="title" >{{item.title}}</div>
+      <template v-if="parseInt(item.rating.stars) > 0">
+        <div class="stars">
+          <yd-rate v-model="item.rating.stars" :readonly="true"></yd-rate>
+        </div>
+      </template>
+      <template v-else>
+        <div class="stars">暂无评分</div>
+      </template>
     </div>
+  </div>
 </template>
 
 <script>
@@ -29,7 +27,7 @@ export default {
       list: "",
       mdata: [],
       value: "",
-      windowSize: false,
+      windowSize: false
     };
   },
   methods: {
@@ -39,7 +37,7 @@ export default {
         .get("api/v2/movie/in_theaters", {
           params: {
             city: "长沙",
-            key: "movie_premium_r, movie_premium_w",
+            apikey: "0b2bdeda43b5688921839c8ecb20399b",
             count: "12",
             star: "0",
             total: "20"
@@ -49,9 +47,10 @@ export default {
           setTimeout(() => {
             self.mdata = response.data.subjects;
             for (let i = 0; i < self.mdata.length; i++) {
-              self.mdata[i].rating.stars = Math.round(self.mdata[i].rating.stars/ 10)
-            };
-            console.log(self.mdata);
+              self.mdata[i].rating.stars = Math.round(
+                self.mdata[i].rating.stars / 10
+              );
+            }
           }, 20);
           return self.mdata;
         })
@@ -74,7 +73,10 @@ export default {
           return (this.windowSize = false);
         }
       }, 20);
-    }
+    },
+    movieDetails(id){
+      this.$router.push({name:'movieDetails',query:{'id':id}});
+    },
   },
   created() {
     this.widowsize();
@@ -128,37 +130,39 @@ export default {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  color: #333;
 }
-.stars{
-  height: .4rem;
-  line-height: .4rem;
+.stars {
+  height: 0.4rem;
+  line-height: 0.4rem;
   width: 100%;
+  text-align: center;
 }
-.yd-cell-item{
-  height: .4rem;
+.yd-cell-item {
+  height: 0.4rem;
   width: 100%;
   padding: 0;
   margin: 0 auto;
 }
-.yd-cell-left{
-  width:100%;
+.yd-cell-left {
+  width: 100%;
   height: 100%;
 }
 .yd-rate a,
-.rate-active{
+.rate-active {
   width: 20%;
-  height: .38rem;
-  padding-left:.06rem;
-  font-size:.36rem;
+  height: 0.38rem;
+  padding-left: 0.06rem;
+  font-size: 0.36rem;
 }
-.movieClass.mobileMovieClass .rate-active{
-  height: .4rem;
+.movieClass.mobileMovieClass .rate-active {
+  height: 0.4rem;
 }
-.yd-rate a:after{
-  width: .100%;
-  height: .38rem;
+.yd-rate a:after {
+  width: 90%;
+  height: 0.38rem;
 }
-.movieClass.mobileMovieClass .yd-rate a:after{
-  height: .44rem;
+.movieClass.mobileMovieClass .yd-rate a:after {
+  height: 0.44rem;
 }
 </style>
