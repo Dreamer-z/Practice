@@ -12,6 +12,7 @@
     "dependencies": {
         "axios": "^0.17.1",
         "vue": "^2.5.2",
+        "vue-awesome-swiper": "^3.1.0",
         "vue-axios": "^2.0.2",
         "vue-router": "^3.0.1",
         "vue-ydui": "^1.1.8"

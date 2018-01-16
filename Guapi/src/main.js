@@ -5,10 +5,13 @@ import App from './App';
 import router from './router';
 import YDUI from 'vue-ydui';
 import 'vue-ydui/dist/ydui.rem.css';
+import VueAwesomeSwiper from 'vue-awesome-swiper';
+// require styles
+import 'swiper/dist/css/swiper.css';
 
 Vue.config.productionTip = false;
 Vue.use(YDUI);
-
+Vue.use(VueAwesomeSwiper);
 // axios全局配置
 // Vue.prototype.$http = axios;
 // axios.defaults.baseURL = api;
@@ -20,5 +23,7 @@ new Vue({
     el: '#app',
     router,
     template: '<App/>',
-    components: { App }
+    components: {
+        App,
+    }
 });

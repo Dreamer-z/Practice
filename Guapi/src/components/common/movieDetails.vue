@@ -52,11 +52,47 @@
         <div class="starDetails">
             <div class="li" v-for="(item, index) in ratArr" :key="item">
                 <span>{{index+1}}星：</span>
-                <div class="progress">
-                    <div class="width"  v-if="ratArr" :style="{width:item+'%',}"></div>
+                <div class="progress"  v-if="ratArr">
+                    <div class="width" :style="{width:item+'%',}"></div>
                     <div class="num">{{item+'%'}}</div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="short">
+        <h3>简介：</h3>
+        <p>{{movieMsg.summary}}</p>
+    </div>
+    <div class="video">
+        <swiper class="banner" :options="swiperOption2" ref="mySwiper">
+            <swiper-slide v-for="item in movieMsg.blooper_urls" :key="item">
+                <video controls>
+                    <source :src="item" type="mp4">
+                </video>
+            </swiper-slide>
+        </swiper>
+    </div>
+    <template>
+        <swiper class="banner" :options="swiperOption" ref="mySwiper">
+            <swiper-slide v-for="item in movieMsg.directors" :key="item.index">
+                <img  v-if="item.large" :src="item.large">
+                <p>{{item.name}}</p>
+                <p class="title">导演</p>
+            </swiper-slide>
+            <swiper-slide v-for="item in movieMsg.casts" :key="item.index">
+                <img v-if="item.large" :src="item.large">
+                <p>{{item.name}}</p>
+                <p class="title">主演</p>
+            </swiper-slide>
+            <div class="swiper-pagination" slot="pagination"></div>
+      </swiper>
+    </template>
+    <div class="shortComment" v-if="movieMsg.popular_reviews">
+        <div class="li" v-for="item in movieMsg.popular_reviews" :key="item.index">
+            <div class="title">
+                <p><span>{{item.author.name}}</span>说：</p>
+            </div>
+            <div>{{item.summary}}</div>
         </div>
     </div>
   </div>
@@ -64,6 +100,7 @@
 
 <script>
 import axios from "axios";
+import { swiper, swiperSlide } from 'vue-awesome-swiper';
 export default {
   name:"",
   data(){
@@ -72,7 +109,30 @@ export default {
               ratings:"",
           },
           ratArr:[],
+          swiperOption2: {
+            speed:1000,
+            autoplay:2000,
+            slidesPerView: '1',
+          },
+          swiperOption: {
+            speed:1000,
+            autoplay:2000,
+            slidesPerView: '3',
+            // pagination: {
+            //     el: '.swiper-pagination'
+            // }
+          },
+          directors:[],
       }
+  },
+  components: {
+    swiper,
+    swiperSlide
+  },
+  computed:{
+    swiper() {
+        return this.$refs.mySwiper.swiper;
+    },
   },
   methods:{
     getMovie(){
@@ -96,17 +156,22 @@ export default {
                             arr.push(response.data.rating.details[key]);     
                         };
                         for (let i = 0; i < arr.length; i++) {
-                            self.ratArr.push((arr[i]/values).toFixed(2)*100);
+                            self.ratArr.push((arr[i]/values*100).toFixed(2));
                         }
                         self.movieMsg.ratings = values;
                         return a(self.movieMsg,self.ratArr);
                     };
                     b();
                     function a(rat,arr){
-                        console.log(rat);
-                        console.log(arr);
+                        self.movieMsg = rat;
+                        self.ratArr = arr;
                     };
-                    
+                    for(var key in self.movieMsg.directors){   
+                        self.movieMsg.directors[key].large = self.movieMsg.directors[key].avatars.large;
+                    };
+                    for(var key in self.movieMsg.casts){   
+                        self.movieMsg.casts[key].large = self.movieMsg.casts[key].avatars.large;
+                    };
                     console.log(self.movieMsg);
                 }, 20);
                 return self.movieMsg;
@@ -120,6 +185,7 @@ export default {
       this.getMovie();
   },
   mounted(){
+
   }
 }
 </script>
@@ -176,6 +242,7 @@ export default {
     width: 3.2rem;
     background-color: #eee;
     padding: .1rem;
+    border-radius: .1rem;
 }
 .scorebox .score .cont{
     overflow: hidden;
@@ -234,21 +301,21 @@ export default {
 .starDetails .li{
     position: relative;
     height: .3rem;
-    line-height: .2rem;
-    padding: .05rem 0;
-    padding-left: .6rem;
+    line-height: .26rem;
+    padding: .02rem 0;
+    padding-left: .8rem;
     font-size: .2rem;
 }
 .starDetails .li span{
     position: absolute;
     left: 0;
     top: .05rem;
-    width: .6rem;
+    width: .8rem;
 }
 .progress{
     width: 100%;
     height:100%;
-    border-radius: .1rem;
+    border-radius: .13rem;
     overflow: hidden;
     border: .01rem solid #eee;
     position: relative;
@@ -256,10 +323,21 @@ export default {
 .progress .width{
     width: 0%;
     height: 100%;
+    border-radius: .12rem;
     -webkit-transition: all .5s ease;
     -moz-transition: all .5s ease;
     transition: all .5s ease;
     background-color: pink;
+}
+.fade-enter-active {
+  transition: all .5s ease;
+}
+.fade-leave-active {
+  transition: all .5s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.fade-enter, .fade-leave-to{
+  transform: translateX(10px);
+  opacity: 0;
 }
 .progress .num{
     width: 100%;
@@ -269,5 +347,62 @@ export default {
     left: 0;
     top: 0;
     text-align: center;
+}
+.short{
+    padding: .2rem;
+    background-color: #5b9600;
+    color: #fff;
+    margin: .2rem 0;
+}
+.short h3{
+    font-size: .28rem;
+    margin-bottom: .1rem;
+}
+.short p{
+    line-height: .36rem;
+}
+.banner{
+    height: 3rem;
+    text-align: center;
+}
+.banner .swiper-slide img,.banner .swiper-slide .photo{
+    display: block;
+    width: 1.5rem;
+    height: 2rem;
+    margin: 0 auto;
+    margin-bottom: .2rem;
+}
+.banner .swiper-slide img,.banner .swiper-slide .title{
+    font-size: .2rem;
+    color: #999;
+}
+.video{
+    margin: .2rem 0;
+    height: 4rem;
+}
+.video .banner{
+    height: 4rem;
+}
+video{
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+}
+video::-internal-media-controls-download-button {
+    display: none;
+}
+
+video::-webkit-media-controls-enclosure {
+    overflow: hidden;
+}
+.shortComment .li{
+    padding: .1rem .2rem;
+}
+.shortComment .li .title{
+    line-height: .4rem;
+}
+.shortComment .li .title span{
+    color:#5b9600;
 }
 </style>
