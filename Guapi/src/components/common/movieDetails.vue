@@ -51,7 +51,7 @@
         </div>
         <div class="starDetails">
             <div class="li" v-for="(item, index) in ratArr" :key="item">
-                <span>{{index+1}}星：</span>
+                <span>{{Math.abs(index-5)}}星：</span>
                 <div class="progress"  v-if="ratArr">
                     <div class="width" :style="{width:item+'%',}"></div>
                     <div class="num">{{item+'%'}}</div>
@@ -164,7 +164,7 @@ export default {
                     b();
                     function a(rat,arr){
                         self.movieMsg = rat;
-                        self.ratArr = arr;
+                        self.ratArr = arr.reverse();
                     };
                     for(var key in self.movieMsg.directors){   
                         self.movieMsg.directors[key].large = self.movieMsg.directors[key].avatars.large;
