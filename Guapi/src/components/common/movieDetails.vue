@@ -87,12 +87,12 @@
             <div class="swiper-pagination" slot="pagination"></div>
       </swiper>
     </template>
-    <div class="shortComment" v-if="movieMsg.popular_reviews">
-        <div class="li" v-for="item in movieMsg.popular_reviews" :key="item.index">
+    <div class="shortComment" v-if="movieMsg.popular_comments">
+        <div class="li" v-for="item in movieMsg.popular_comments" :key="item.index">
             <div class="title">
                 <p><span>{{item.author.name}}</span>说：</p>
             </div>
-            <div>{{item.summary}}</div>
+            <div>{{item.content}}</div>
         </div>
     </div>
   </div>
