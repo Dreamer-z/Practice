@@ -51,7 +51,7 @@
         </div>
         <div class="starDetails">
             <div class="li" v-for="(item, index) in ratArr" :key="item">
-                <span>{{Math.abs(index-5)}}星：</span>
+                <span>{{Math.abse(index-5)}}星：</span>
                 <div class="progress"  v-if="ratArr">
                     <div class="width" :style="{width:item+'%',}"></div>
                     <div class="num">{{item+'%'}}</div>
