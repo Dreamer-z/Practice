@@ -1,14 +1,14 @@
 <template>
   <div class="head">
-      <div class="title">Guapi</div>
+      <div class="title"><router-link to="/">Guapi</router-link></div>
       <div class="search">
         <yd-input class="searchInp" v-model="keyword" max="20" placeholder="请输入关键字" :show-clear-icon="true" :show-success-icon="false" :show-error-icon="false"></yd-input>
         <yd-button v-show="!windowSize" class="searchBtn" size="large" bgcolor="#06ecf7" color="#FFF">搜索</yd-button>
       </div>
       <ul class="headNav" ref="headNav" v-if="!windowSize">
-        <li class="headNavLi"><a href="" @mouseenter="randomC()" @mouseleave="initC()">购票</a></li>
-        <li class="headNavLi"><a href="" @mouseenter="randomC()" @mouseleave="initC()">开眼</a></li>
-        <li class="headNavLi"><a href="" @mouseenter="randomC()" @mouseleave="initC()">Top250</a></li>
+        <li class="headNavLi"><router-link to="" @mouseenter="randomC()" @mouseleave="initC()">购票</router-link></li>
+        <li class="headNavLi"><router-link to="" @mouseenter="randomC()" @mouseleave="initC()">开眼</router-link></li>
+        <li class="headNavLi"><router-link to="" @mouseenter="randomC()" @mouseleave="initC()">Top250</router-link></li>
       </ul>
       <div class="mobileNavBox" v-else>
             <div class="mobileNavIconbox" @click="mobile()" :class="{open:mobileNav}">
@@ -18,9 +18,15 @@
             </div>
             <transition name="bounce">
                 <ul class="mobileNav" v-show="mobileNav">
-                    <li class="mobileNavLi"><a href="" @mouseenter="randomC()" @mouseleave="initC()">购票</a></li>
-                    <li class="mobileNavLi"><a href="" @mouseenter="randomC()" @mouseleave="initC()">开眼</a></li>
-                    <li class="mobileNavLi"><a href="" @mouseenter="randomC()" @mouseleave="initC()">Top250</a></li>
+                    <li class="mobileNavLi">
+                        <router-link to="" @mouseenter="randomC()" @mouseleave="initC()">购票</router-link>
+                    </li>
+                    <li class="mobileNavLi">
+                        <router-link to="" @mouseenter="randomC()" @mouseleave="initC()">开眼</router-link>
+                    </li>
+                    <li class="mobileNavLi">
+                        <router-link to="" @mouseenter="randomC()" @mouseleave="initC()">Top250</router-link>
+                    </li>
                 </ul>
             </transition>
       </div>

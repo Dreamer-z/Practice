@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="movieDetails">
+    <Head></Head>
     <div class="movieMsg">
         <div class="photoScore">
             <div class="photo"><img v-if="movieMsg.images" :src="movieMsg.images.large" alt=""></div>
@@ -51,7 +52,7 @@
         </div>
         <div class="starDetails">
             <div class="li" v-for="(item, index) in ratArr" :key="item">
-                <span>{{Math.abse(index-5)}}星：</span>
+                <span>{{Math.abs(index-5)}}星：</span>
                 <div class="progress"  v-if="ratArr">
                     <div class="width" :style="{width:item+'%',}"></div>
                     <div class="num">{{item+'%'}}</div>
@@ -95,12 +96,15 @@
             <div>{{item.content}}</div>
         </div>
     </div>
+    <Foot></Foot>
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import { swiper, swiperSlide } from 'vue-awesome-swiper';
+import Head from '@/components/common/Header';
+import Foot from '@/components/common/Footer';
 export default {
   name:"",
   data(){
@@ -127,7 +131,9 @@ export default {
   },
   components: {
     swiper,
-    swiperSlide
+    swiperSlide,
+    Head,
+    Foot,
   },
   computed:{
     swiper() {
@@ -191,6 +197,9 @@ export default {
 </script>
 
 <style>
+.movieDetails{
+    padding:1rem 0;
+}
 .movieMsg{
     width: 7.5rem;
     padding: .25rem;
@@ -260,29 +269,29 @@ export default {
     float: left;
     width: 2rem;
 }
-.stars {
+.averagestar .yd-rate{
+  font-size: 0.28rem;
+  width: 1.5rem;
+  margin: .1rem auto;
+}
+.averagestar .yd-cell-left {
+  width: 100%;
+  height: 100%;
+}
+.averagestar .yd-rate a,
+.averagestar .rate-active {
+  width: 20%;
+  height: 0.4rem;
+  line-height: 0.4rem;
+  padding: 0 !important;
+  font-size: .3rem;
+}
+.averagestar .stars {
   height: 0.3rem;
   width: 100%;
   text-align: center;
 }
-.yd-rate {
-  width: 1.5rem;
-  margin: .1rem auto;
-}
-.yd-cell-left {
-  width: 100%;
-  height: 100%;
-}
-.yd-rate a,
-.rate-active {
-  width: 20%;
-  height: 0.3rem;
-  font-size: 0.28rem;
-}
-.yd-rate a:after {
-  width: 100%;
-  height: 100%;
-}
+
 .scorebox .score .cont .commentNumber{
     font-size:.24rem;
     width: 100%;

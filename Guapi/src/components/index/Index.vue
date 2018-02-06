@@ -2,7 +2,12 @@
   <div class="index">
     <Head></Head>
     <div class="main">
-        <movieClass></movieClass>
+        <div class="movieType"><span>正在热映</span></div>
+        <movieClass type="in_theaters"></movieClass>
+        <div class="movieType"><span>即将上映</span></div>
+        <movieClass type="coming_soon"></movieClass>
+        <div class="movieType"><span>口碑榜</span></div>
+        <movieClass type="weekly"></movieClass>
     </div>
     <Foot></Foot>
   </div>
@@ -37,5 +42,14 @@
     .main{
         margin-top: 1rem;
         margin-bottom: .8rem;
+    }
+    .movieType{
+        padding: .2rem ;
+        color: #333;
+        font-size: .3rem;
+    }
+    .movieType span{
+        padding:.1rem 0;
+        border-bottom: .05rem solid pink;
     }
 </style>

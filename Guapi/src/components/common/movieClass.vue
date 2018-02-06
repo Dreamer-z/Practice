@@ -1,13 +1,35 @@
 <template>
-  <div class="hot" v-if="mdata.length" :class="{hotMobile:windowSize}">
-    <div :class="{mobileMovieClass:windowSize}" class="movieClass" v-for="item in mdata" :key="item.index" @click="movieDetails(item.id)">
+  <div class="hot" v-if="mdata.total" :class="{hotMobile:windowSize}">
+    <div :class="{mobileMovieClass:windowSize}" class="movieClass" v-for="item in mdata.subjects" :key="item.index" @click="movieDetails(item.id)">
       <div class="poster">
         <img :src="item.images.large" alt="">
       </div>
       <div class="title" >{{item.title}}</div>
       <template v-if="parseInt(item.rating.stars) > 0">
         <div class="stars">
-          <yd-rate v-model="item.rating.stars" :readonly="true"></yd-rate>
+          <div>
+            <span class="starnum">{{item.rating.stars}}</span>
+            <yd-rate v-model="item.rating.stars" :readonly="true"></yd-rate>
+          </div>
+        </div>
+      </template>
+      <template v-else>
+        <div class="stars">暂无评分</div>
+      </template>
+    </div>
+  </div>
+  <div class="hot" :class="{hotMobile:windowSize}" v-else>
+    <div :class="{mobileMovieClass:windowSize}" class="movieClass" v-for="item in mdata.subjects" :key="item.index" @click="movieDetails(item.subject.id)">
+      <div class="poster">
+        <img :src="item.subject.images.large" alt="">
+      </div>
+      <div class="title" >{{item.subject.title}}</div>
+      <template v-if="parseInt(item.subject.rating.stars) > 0">
+        <div class="stars">
+          <div>
+            <span class="starnum">{{item.subject.rating.stars}}</span>
+            <yd-rate v-model="item.subject.rating.stars" :readonly="true"></yd-rate>
+          </div>
         </div>
       </template>
       <template v-else>
@@ -22,19 +44,23 @@ import Vue from "vue";
 import axios from "axios";
 export default {
   name: "movieClass",
+  props:["type"],
   data() {
     return {
       list: "",
       mdata: [],
       value: "",
-      windowSize: false
+      windowSize: false,
     };
+  },
+  computed:{
+
   },
   methods: {
     movieList() {
       const self = this;
       axios
-        .get("api/v2/movie/in_theaters", {
+        .get("api/v2/movie/"+this.type, {
           params: {
             city: "长沙",
             apikey: "0b2bdeda43b5688921839c8ecb20399b",
@@ -45,11 +71,15 @@ export default {
         })
         .then(function(response) {
           setTimeout(() => {
-            self.mdata = response.data.subjects;
-            for (let i = 0; i < self.mdata.length; i++) {
-              self.mdata[i].rating.stars = Math.round(
-                self.mdata[i].rating.stars / 10
-              );
+            self.mdata = response.data;
+            if (self.mdata.total) {
+              for (let i = 0; i < self.mdata.subjects.length; i++) {
+                self.mdata.subjects[i].rating.stars = Math.round(self.mdata.subjects[i].rating.stars / 10);
+              };
+            } else {
+              for (let i = 0; i < self.mdata.subjects.length; i++) {
+                self.mdata.subjects[i].subject.rating.stars = Math.round(self.mdata.subjects[i].subject.rating.stars / 10);
+              };
             }
           }, 20);
           return self.mdata;
@@ -132,37 +162,41 @@ export default {
   -webkit-box-orient: vertical;
   color: #333;
 }
-.stars {
+.hot .stars {
   height: 0.4rem;
   line-height: 0.4rem;
-  width: 100%;
+  min-width: 1rem;
   text-align: center;
 }
-.yd-cell-item {
+.hot .stars>div{
   height: 0.4rem;
-  width: 100%;
-  padding: 0;
+  width: 1.85rem;
+  line-height: 0.4rem;
   margin: 0 auto;
+  overflow: hidden;
 }
-.yd-cell-left {
+.hot .stars .starnum{
+  float: left;
+  margin-right: .1rem;
+}
+.hot .yd-rate{
+  float: right;
+}
+.hot .yd-cell-left {
   width: 100%;
   height: 100%;
 }
-.yd-rate a,
-.rate-active {
+.hot .yd-rate a,
+.hot .rate-active {
   width: 20%;
-  height: 0.38rem;
-  padding-left: 0.06rem;
-  font-size: 0.36rem;
-}
-.movieClass.mobileMovieClass .rate-active {
   height: 0.4rem;
+  line-height: 0.4rem;
+  font-size: 0.28rem;
+  padding: 0 !important;
 }
-.yd-rate a:after {
-  width: 90%;
-  height: 0.38rem;
+.hot .yd-rate a:after {
+  width: 100%;
+  height: 100%;
 }
-.movieClass.mobileMovieClass .yd-rate a:after {
-  height: 0.44rem;
-}
+
 </style>
