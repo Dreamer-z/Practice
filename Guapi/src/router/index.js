@@ -7,6 +7,7 @@ import Movies from '@/components/top250/movies';
 Vue.use(Router);
 
 export default new Router({
+    mode: "history",
     routes: [{
             path: '/',
             name: 'index',
